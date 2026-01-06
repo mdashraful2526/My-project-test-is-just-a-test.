@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সোশ্যাল মিডিয়া পোস্ট মেকার</title>
+    <title>বাংলাদেশ সংবাদপত্র জেনারেটর</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,21 +14,26 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Noto Serif Bengali', 'SolaimanLipi', 'Kalpurush', Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
         }
 
         .header {
-            text-align: center;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            margin-bottom: 30px;
+            padding: 30px;
+            text-align: center;
         }
 
         .header h1 {
@@ -35,190 +42,204 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .main-content {
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
             display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 20px;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 40px;
         }
 
-        .controls-panel {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            height: fit-content;
-        }
-
-        .control-section {
-            margin-bottom: 25px;
-        }
-
-        .control-section h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 8px;
-        }
-
-        .canvas-container {
-            background: white;
-            border-radius: 15px;
+        .form-section {
+            background: #f8f9fa;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        canvas {
-            border: 3px solid #667eea;
             border-radius: 10px;
-            max-width: 100%;
-            cursor: crosshair;
         }
 
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: all 0.3s;
-            width: 100%;
-            margin-bottom: 10px;
+        .form-section h2 {
+            color: #2a5298;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4);
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .file-input-wrapper input[type=file] {
-            position: absolute;
-            left: -9999px;
-        }
-
-        .file-input-label {
+        label {
             display: block;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            text-align: center;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        .file-input-label:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             color: #333;
             font-weight: bold;
+            font-size: 1.1em;
         }
 
-        .input-group input, .input-group select, .input-group textarea {
+        input, textarea, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 2px solid #ddd;
             border-radius: 8px;
-            font-size: 14px;
-            transition: border 0.3s;
+            font-size: 1em;
+            font-family: 'Noto Serif Bengali', 'SolaimanLipi', 'Kalpurush', Arial, sans-serif;
+            transition: border-color 0.3s;
         }
 
-        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: #667eea;
         }
 
-        .template-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
+        textarea {
+            min-height: 150px;
+            resize: vertical;
         }
 
-        .template-btn {
-            padding: 30px 10px;
-            border: 2px solid #ddd;
+        .image-upload {
+            display: none;
+        }
+
+        .preview-image-item {
+            position: relative;
             border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #ddd;
+        }
+
+        .preview-image-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #f5576c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
             cursor: pointer;
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
             font-weight: bold;
-            transition: all 0.3s;
-            color: #333;
         }
 
-        .template-btn:hover {
-            transform: scale(1.05);
-            border-color: #667eea;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .remove-image:hover {
+            background: #d43f54;
         }
 
-        .color-picker-wrapper {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .color-picker-wrapper input[type="color"] {
-            width: 50px;
-            height: 40px;
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
             border: none;
             border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
             cursor: pointer;
-        }
-
-        .action-buttons {
+            width: 100%;
             margin-top: 20px;
-            display: flex;
-            gap: 10px;
+            transition: transform 0.2s;
         }
 
-        .preview-image {
-            max-width: 100px;
-            max-height: 100px;
-            border-radius: 8px;
-            margin-top: 10px;
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .preview-section {
+            background: white;
             border: 2px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
-        @media (max-width: 1024px) {
-            .main-content {
+        #newspaperPreview {
+            padding: 0;
+            background: white;
+            font-family: 'Noto Serif Bengali', 'SolaimanLipi', 'Kalpurush', Arial, sans-serif;
+        }
+
+        .newspaper-header {
+            text-align: center;
+            border-bottom: 3px solid #000;
+            padding: 15px 15px 12px 15px;
+            margin: 0;
+            background: #f9f9f9;
+        }
+
+        .newspaper-name {
+            font-size: 2.8em;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 8px;
+        }
+
+        .newspaper-info {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .newspaper-content {
+            padding: 15px;
+            line-height: 1.6;
+        }
+
+        .article-headline {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin: 0 0 12px 0;
+            color: #000;
+            line-height: 1.3;
+        }
+
+        .article-meta {
+            color: #666;
+            margin: 0 0 12px 0;
+            font-style: italic;
+            font-size: 0.95em;
+        }
+
+        .article-image {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            margin: 12px 0;
+            border-radius: 0;
+        }
+
+        .article-images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .article-images-grid img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 0;
+        }
+
+        .article-text {
+            font-size: 13pt;
+            line-height: 1.6;
+            text-align: justify;
+            color: #333;
+            margin: 0;
+            word-wrap: break-word;
+        }
+
+        @media (max-width: 768px) {
+            .content {
                 grid-template-columns: 1fr;
             }
         }
@@ -227,480 +248,259 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎨 প্রফেশনাল পোস্ট মেকার</h1>
-            <p>আপনার টিমের জন্য সুন্দর সোশ্যাল মিডিয়া পোস্ট তৈরি করুন</p>
+            <h1>🗞️ বাংলাদেশ সংবাদপত্র জেনারেটর</h1>
+            <p>আপনার নিজস্ব সংবাদপত্র নিবন্ধ তৈরি করুন এবং ইমেজ ডাউনলোড করুন</p>
         </div>
 
-        <div class="main-content">
-            <div class="controls-panel">
-                <div class="control-section">
-                    <h3>📐 টেমপ্লেট সিলেক্ট করুন</h3>
-                    <div class="template-grid">
-                        <button class="template-btn" onclick="selectTemplate('match')">ম্যাচ আপডেট</button>
-                        <button class="template-btn" onclick="selectTemplate('player')">প্লেয়ার স্ট্যাট</button>
-                        <button class="template-btn" onclick="selectTemplate('score')">স্কোর কার্ড</button>
-                        <button class="template-btn" onclick="selectTemplate('announcement')">ঘোষণা</button>
-                    </div>
+        <div class="content">
+            <div class="form-section">
+                <h2>📝 তথ্য লিখুন</h2>
+                
+                <div class="form-group">
+                    <label>পত্রিকার নাম</label>
+                    <select id="newspaperName">
+                        <option value="">নির্বাচন করুন বা লিখুন</option>
+                        <option value="প্রথম আলো">প্রথম আলো</option>
+                        <option value="কালের কণ্ঠ">কালের কণ্ঠ</option>
+                        <option value="যুগান্তর">যুগান্তর</option>
+                        <option value="সমকাল">সমকাল</option>
+                        <option value="ইত্তেফাক">ইত্তেফাক</option>
+                        <option value="বাংলাদেশ প্রতিদিন">বাংলাদেশ প্রতিদিন</option>
+                        <option value="যায়যায়দিন">যায়যায়দিন</option>
+                        <option value="মানবজমিন">মানবজমিন</option>
+                        <option value="ভোরের কাগজ">ভোরের কাগজ</option>
+                        <option value="নয়া দিগন্ত">নয়া দিগন্ত</option>
+                        <option value="The Daily Star">The Daily Star</option>
+                        <option value="Dhaka Tribune">Dhaka Tribune</option>
+                        <option value="বন্ধুদের খবর">বন্ধুদের খবর</option>
+                        <option value="ফান টাইম নিউজ">ফান টাইম নিউজ</option>
+                        <option value="হাসবোই আজ">হাসবোই আজ</option>
+                        <option value="খবর না মজা?">খবর না মজা?</option>
+                        <option value="নিউজের নামে ফান">নিউজের নামে ফান</option>
+                        <option value="হাসির হেডলাইন">হাসির হেডলাইন</option>
+                        <option value="custom">নিজস্ব নাম লিখুন</option>
+                    </select>
+                    <input type="text" id="customNewspaperName" placeholder="নিজস্ব পত্রিকার নাম" style="display: none; margin-top: 10px;">
                 </div>
 
-                <div class="control-section">
-                    <h3>🖼️ ছবি আপলোড করুন</h3>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="playerImage" accept="image/*" onchange="uploadPlayerImage(event)">
-                        <label for="playerImage" class="file-input-label">প্লেয়ার ছবি</label>
-                    </div>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="logoImage" accept="image/*" onchange="uploadLogo(event)">
-                        <label for="logoImage" class="file-input-label">টিম লোগো</label>
-                    </div>
-                    <div id="imagePreview"></div>
+                <div class="form-group">
+                    <label>শিরোনাম</label>
+                    <input type="text" id="headline" placeholder="সংবাদের শিরোনাম লিখুন">
                 </div>
 
-                <div class="control-section">
-                    <h3>✏️ টেক্সট যোগ করুন</h3>
-                    <div class="input-group">
-                        <label>প্রধান টেক্সট:</label>
-                        <input type="text" id="mainText" placeholder="যেমন: MATCH UPDATE" oninput="updateCanvas()">
-                    </div>
-                    <div class="input-group">
-                        <label>সাব টেক্সট:</label>
-                        <input type="text" id="subText" placeholder="যেমন: 20 OVERS" oninput="updateCanvas()">
-                    </div>
-                    <div class="input-group">
-                        <label>স্কোর/অতিরিক্ত টেক্সট:</label>
-                        <input type="text" id="scoreText" placeholder="যেমন: 150/4" oninput="updateCanvas()">
-                    </div>
-                    <div class="input-group">
-                        <label>ফন্ট সাইজ: <span id="fontSizeValue">60</span>px</label>
-                        <input type="range" id="fontSize" min="20" max="120" value="60" oninput="document.getElementById('fontSizeValue').textContent = this.value; updateCanvas()">
-                    </div>
+                <div class="form-group">
+                    <label>লেখক</label>
+                    <input type="text" id="author" placeholder="লেখকের নাম">
                 </div>
 
-                <div class="control-section">
-                    <h3>🎨 রঙ সিলেক্ট করুন</h3>
-                    <div class="input-group">
-                        <label>ব্যাকগ্রাউন্ড রঙ:</label>
-                        <div class="color-picker-wrapper">
-                            <input type="color" id="bgColor1" value="#1e3a8a" onchange="updateCanvas()">
-                            <input type="color" id="bgColor2" value="#3b82f6" onchange="updateCanvas()">
-                            <span style="font-size: 12px;">গ্রেডিয়েন্ট</span>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label>টেক্সট রঙ:</label>
-                        <input type="color" id="textColor" value="#fbbf24" onchange="updateCanvas()">
-                    </div>
+                <div class="form-group">
+                    <label>ছবি আপলোড (একাধিক ছবি নির্বাচন করতে পারবেন)</label>
+                    <input type="file" id="imageUpload" accept="image/*" multiple style="display: none;">
+                    <button class="btn" onclick="handleImageClick()" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); margin-top: 0;">
+                        📷 ছবি নির্বাচন করুন
+                    </button>
+                    <div id="imagePreviewContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 15px;"></div>
                 </div>
 
-                <div class="control-section">
-                    <button class="btn btn-primary" onclick="addText()">টেক্সট যোগ করুন</button>
-                    <button class="btn btn-success" onclick="downloadImage()">ডাউনলোড করুন</button>
-                    <button class="btn btn-primary" onclick="clearCanvas()">রিসেট করুন</button>
+                <div class="form-group">
+                    <label>সংবাদ লিখুন</label>
+                    <textarea id="articleText" placeholder="এখানে সংবাদের বিস্তারিত লিখুন..."></textarea>
                 </div>
+
+                <button class="btn" onclick="generateNewspaper()">📰 প্রিভিউ দেখুন</button>
+                <button class="btn" onclick="handleDownloadImage()" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">📥 ছবি হিসেবে ডাউনলোড করুন</button>
             </div>
 
-            <div class="canvas-container">
-                <canvas id="canvas" width="1080" height="1080"></canvas>
-                <div class="action-buttons">
-                    <button class="btn btn-success" onclick="downloadImage()">📥 ডাউনলোড করুন</button>
+            <div class="preview-section">
+                <div id="newspaperPreview">
+                    <div class="newspaper-header">
+                        <div class="newspaper-name" id="previewNewspaperName">পত্রিকার নাম</div>
+                        <div class="newspaper-info" id="previewDate"></div>
+                    </div>
+                    <div class="newspaper-content">
+                        <div class="article-headline" id="previewHeadline">শিরোনাম এখানে দেখা যাবে</div>
+                        <div class="article-meta" id="previewAuthor">লেখক: -</div>
+                        <div id="previewImagesContainer"></div>
+                        <div class="article-text" id="previewText">সংবাদের বিষয়বস্তু এখানে দেখা যাবে...</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        let playerImg = null;
-        let logoImg = null;
-        let currentTemplate = 'match';
+        // বাংলা তারিখ
+        const bengaliMonths = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
+        const bengaliDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
 
-        function removeBackground(img) {
-            const tempCanvas = document.createElement('canvas');
-            const tempCtx = tempCanvas.getContext('2d');
-            tempCanvas.width = img.width;
-            tempCanvas.height = img.height;
+        function toBengaliNumber(num) {
+            return String(num).split('').map(d => bengaliDigits[d]).join('');
+        }
+
+        function getBengaliDate() {
+            const date = new Date();
+            const day = toBengaliNumber(date.getDate());
+            const month = bengaliMonths[date.getMonth()];
+            const year = toBengaliNumber(date.getFullYear());
+            return `${day} ${month}, ${year}`;
+        }
+
+        document.getElementById('previewDate').textContent = getBengaliDate();
+
+        // Newspaper selection
+        document.getElementById('newspaperName').addEventListener('change', function() {
+            const customInput = document.getElementById('customNewspaperName');
+            if (this.value === 'custom') {
+                customInput.style.display = 'block';
+            } else {
+                customInput.style.display = 'none';
+            }
+        });
+
+        // Image upload
+        let uploadedImages = [];
+
+        function handleImageClick() {
+            document.getElementById('imageUpload').click();
+        }
+
+        document.getElementById('imageUpload').addEventListener('change', function(e) {
+            const files = e.target.files;
             
-            tempCtx.drawImage(img, 0, 0);
-            const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-            const data = imageData.data;
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImages.push(e.target.result);
+                    updateImagePreviews();
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function updateImagePreviews() {
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            previewContainer.innerHTML = '';
             
-            // Advanced background removal algorithm
-            for (let i = 0; i < data.length; i += 4) {
-                const r = data[i];
-                const g = data[i + 1];
-                const b = data[i + 2];
+            uploadedImages.forEach((imgSrc, index) => {
+                const imgDiv = document.createElement('div');
+                imgDiv.className = 'preview-image-item';
                 
-                // Multiple conditions for better background removal
-                const isWhite = r > 200 && g > 200 && b > 200;
-                const isLightGray = r > 180 && g > 180 && b > 180 && Math.abs(r - g) < 20 && Math.abs(g - b) < 20;
-                const isBeige = r > 200 && g > 190 && b > 170 && r - b < 50;
-                const isPaleColor = r > 190 && g > 190 && (Math.abs(r - g) < 30);
+                const img = document.createElement('img');
+                img.src = imgSrc;
                 
-                // Sky/Stadium background colors
-                const isLightBlue = b > 150 && r > 120 && g > 120 && b > r && b > g;
-                const isSkyBlue = b > r + 20 && b > g + 20 && r > 100;
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-image';
+                removeBtn.textContent = '×';
+                removeBtn.onclick = function() {
+                    uploadedImages.splice(index, 1);
+                    updateImagePreviews();
+                };
                 
-                // Green field/pitch colors
-                const isGreen = g > r + 20 && g > b + 10 && g > 80;
-                
-                if (isWhite || isLightGray || isBeige || isPaleColor || isLightBlue || isSkyBlue || isGreen) {
-                    data[i + 3] = 0; // Make transparent
+                imgDiv.appendChild(img);
+                imgDiv.appendChild(removeBtn);
+                previewContainer.appendChild(imgDiv);
+            });
+        }
+
+        function generateNewspaper() {
+            const newspaperSelect = document.getElementById('newspaperName');
+            const customName = document.getElementById('customNewspaperName').value;
+            const newspaperName = newspaperSelect.value === 'custom' ? customName : newspaperSelect.value;
+            const headline = document.getElementById('headline').value;
+            const author = document.getElementById('author').value;
+            const articleText = document.getElementById('articleText').value;
+
+            document.getElementById('previewNewspaperName').textContent = newspaperName || 'পত্রিকার নাম';
+            document.getElementById('previewHeadline').textContent = headline || 'শিরোনাম এখানে দেখা যাবে';
+            document.getElementById('previewAuthor').textContent = author ? `লেখক: ${author}` : 'লেখক: -';
+            document.getElementById('previewText').textContent = articleText || 'সংবাদের বিষয়বস্তু এখানে দেখা যাবে...';
+
+            const previewImagesContainer = document.getElementById('previewImagesContainer');
+            previewImagesContainer.innerHTML = '';
+            
+            if (uploadedImages.length > 0) {
+                if (uploadedImages.length === 1) {
+                    const img = document.createElement('img');
+                    img.src = uploadedImages[0];
+                    img.className = 'article-image';
+                    previewImagesContainer.appendChild(img);
+                } else {
+                    const gridDiv = document.createElement('div');
+                    gridDiv.className = 'article-images-grid';
+                    
+                    uploadedImages.forEach(imgSrc => {
+                        const img = document.createElement('img');
+                        img.src = imgSrc;
+                        gridDiv.appendChild(img);
+                    });
+                    
+                    previewImagesContainer.appendChild(gridDiv);
                 }
             }
+        }
+
+        function handleDownloadImage() {
+            const element = document.getElementById('newspaperPreview');
             
-            tempCtx.putImageData(imageData, 0, 0);
-            return tempCanvas;
-        }
-
-        function uploadPlayerImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        playerImg = removeBackground(img);
-                        updateCanvas();
-                        
-                        const preview = document.getElementById('imagePreview');
-                        preview.innerHTML = '<img src="' + e.target.result + '" class="preview-image" alt="Preview">';
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function uploadLogo(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        logoImg = img;
-                        updateCanvas();
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function selectTemplate(template) {
-            currentTemplate = template;
-            updateCanvas();
-        }
-
-        function drawGradientBackground() {
-            const color1 = document.getElementById('bgColor1').value;
-            const color2 = document.getElementById('bgColor2').value;
+            // Create a temporary wrapper for A4 size
+            const wrapper = document.createElement('div');
+            wrapper.style.width = '210mm';
+            wrapper.style.minHeight = '297mm';
+            wrapper.style.padding = '10mm';
+            wrapper.style.backgroundColor = '#ffffff';
+            wrapper.style.boxSizing = 'border-box';
+            wrapper.style.position = 'absolute';
+            wrapper.style.left = '-9999px';
+            wrapper.style.fontFamily = "'Noto Serif Bengali', 'SolaimanLipi', 'Kalpurush', Arial, sans-serif";
+            wrapper.style.pageBreakInside = 'avoid';
             
-            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0, color1);
-            gradient.addColorStop(1, color2);
+            // Clone the content
+            const clonedContent = element.cloneNode(true);
+            clonedContent.style.padding = '0';
+            clonedContent.style.margin = '0';
             
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function updateCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawGradientBackground();
-            
-            if (currentTemplate === 'match') {
-                drawMatchTemplate();
-            } else if (currentTemplate === 'player') {
-                drawPlayerTemplate();
-            } else if (currentTemplate === 'score') {
-                drawScoreTemplate();
-            } else if (currentTemplate === 'announcement') {
-                drawAnnouncementTemplate();
+            // Adjust text size for better fit
+            const textElement = clonedContent.querySelector('.article-text');
+            if (textElement) {
+                textElement.style.fontSize = '13pt';
+                textElement.style.lineHeight = '1.6';
             }
             
-            if (logoImg) {
-                ctx.drawImage(logoImg, canvas.width - 200, 50, 150, 150);
-            }
-        }
-
-        function drawMatchTemplate() {
-            const mainText = document.getElementById('mainText').value || 'MATCH UPDATE';
-            const subText = document.getElementById('subText').value || '20 OVERS';
-            const scoreText = document.getElementById('scoreText').value || '150/4';
-            const textColor = document.getElementById('textColor').value;
-            const fontSize = document.getElementById('fontSize').value;
+            wrapper.appendChild(clonedContent);
+            document.body.appendChild(wrapper);
             
-            // Top banner with gradient
-            const topGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-            topGradient.addColorStop(0, 'rgba(255,215,0,0.3)');
-            topGradient.addColorStop(1, 'rgba(255,165,0,0.3)');
-            ctx.fillStyle = topGradient;
-            ctx.fillRect(0, 0, canvas.width, 250);
+            // Calculate pages needed
+            const contentHeight = wrapper.scrollHeight;
+            const pageHeight = 1123; // A4 height in pixels
+            const pagesNeeded = Math.ceil(contentHeight / pageHeight);
             
-            // Main text with shadow
-            ctx.shadowColor = 'rgba(0,0,0,0.5)';
-            ctx.shadowBlur = 15;
-            ctx.shadowOffsetX = 3;
-            ctx.shadowOffsetY = 3;
-            
-            ctx.fillStyle = textColor;
-            ctx.font = `bold ${fontSize * 1.2}px Arial`;
-            ctx.textAlign = 'center';
-            ctx.fillText(mainText, canvas.width / 2, 150);
-            
-            ctx.shadowBlur = 0;
-            ctx.shadowOffsetX = 0;
-            ctx.shadowOffsetY = 0;
-            
-            // Player image with better positioning
-            if (playerImg) {
-                const imgWidth = 650;
-                const imgHeight = 650;
-                ctx.drawImage(playerImg, (canvas.width - imgWidth) / 2, 280, imgWidth, imgHeight);
-            }
-            
-            // Bottom section with dark overlay
-            ctx.fillStyle = 'rgba(0,0,0,0.75)';
-            ctx.fillRect(0, canvas.height - 280, canvas.width, 280);
-            
-            // Decorative line
-            ctx.fillStyle = textColor;
-            ctx.fillRect(200, canvas.height - 290, canvas.width - 400, 6);
-            
-            // Score with large font
-            ctx.shadowColor = 'rgba(0,0,0,0.8)';
-            ctx.shadowBlur = 20;
-            ctx.font = `bold ${parseInt(fontSize) * 1.8}px Arial`;
-            ctx.fillStyle = '#ffffff';
-            ctx.fillText(scoreText, canvas.width / 2, canvas.height - 150);
-            
-            ctx.shadowBlur = 0;
-            
-            // Sub text
-            ctx.font = `${fontSize * 0.7}px Arial`;
-            ctx.fillStyle = textColor;
-            ctx.fillText(subText, canvas.width / 2, canvas.height - 70);
-        }
-
-        function drawPlayerTemplate() {
-            const mainText = document.getElementById('mainText').value || 'HARSHIT RANA';
-            const subText = document.getElementById('subText').value || 'for DEL vs SER';
-            const scoreText = document.getElementById('scoreText').value || '4/47';
-            const textColor = document.getElementById('textColor').value;
-            const fontSize = document.getElementById('fontSize').value;
-            
-            // Side banner design
-            ctx.fillStyle = 'rgba(255,215,0,0.2)';
-            ctx.fillRect(0, 0, 350, canvas.height);
-            
-            // Player image - larger and centered
-            if (playerImg) {
-                const imgWidth = 750;
-                const imgHeight = 750;
-                ctx.drawImage(playerImg, (canvas.width - imgWidth) / 2 + 100, 180, imgWidth, imgHeight);
-            }
-            
-            // Left side text area with overlay
-            const leftGradient = ctx.createLinearGradient(0, 200, 400, 200);
-            leftGradient.addColorStop(0, 'rgba(0,0,0,0.85)');
-            leftGradient.addColorStop(1, 'rgba(0,0,0,0.3)');
-            ctx.fillStyle = leftGradient;
-            ctx.fillRect(0, 150, 450, 700);
-            
-            // Main heading (Player name)
-            ctx.textAlign = 'left';
-            ctx.shadowColor = 'rgba(0,0,0,0.7)';
-            ctx.shadowBlur = 10;
-            
-            // Split name into parts for styling
-            const nameParts = mainText.split(' ');
-            ctx.fillStyle = '#ffffff';
-            ctx.font = `bold ${fontSize * 1.1}px Arial`;
-            ctx.fillText(nameParts[0] || 'PLAYER', 80, 400);
-            
-            ctx.fillStyle = textColor;
-            ctx.font = `bold ${fontSize * 1.1}px Arial`;
-            ctx.fillText(nameParts[1] || 'NAME', 80, 480);
-            
-            ctx.shadowBlur = 0;
-            
-            // Score with dramatic styling
-            ctx.shadowColor = 'rgba(0,0,0,0.9)';
-            ctx.shadowBlur = 15;
-            ctx.fillStyle = '#ffffff';
-            ctx.font = `bold ${fontSize * 2.2}px Arial`;
-            ctx.textAlign = 'left';
-            ctx.fillText(scoreText, 80, 630);
-            
-            ctx.shadowBlur = 0;
-            
-            // Sub text
-            ctx.fillStyle = textColor;
-            ctx.font = `${fontSize * 0.55}px Arial`;
-            ctx.fillText(subText, 80, 720);
-            
-            // Decorative elements
-            ctx.fillStyle = textColor;
-            ctx.fillRect(80, 750, 250, 4);
-        }
-
-        function drawScoreTemplate() {
-            const mainText = document.getElementById('mainText').value || 'HALF CENTURY';
-            const subText = document.getElementById('subText').value || 'VS RANGPUR RIDERS';
-            const scoreText = document.getElementById('scoreText').value || '50*';
-            const textColor = document.getElementById('textColor').value;
-            const fontSize = document.getElementById('fontSize').value;
-            
-            // Diagonal design element
-            ctx.save();
-            ctx.fillStyle = 'rgba(255,215,0,0.15)';
-            ctx.translate(canvas.width / 2, canvas.height / 2);
-            ctx.rotate(-25 * Math.PI / 180);
-            ctx.fillRect(-600, -600, 1200, 1200);
-            ctx.restore();
-            
-            // Large score number with extreme styling
-            ctx.textAlign = 'center';
-            ctx.shadowColor = 'rgba(0,0,0,0.8)';
-            ctx.shadowBlur = 25;
-            ctx.shadowOffsetX = 5;
-            ctx.shadowOffsetY = 5;
-            
-            // Stroke for score
-            ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 8;
-            ctx.font = `bold ${fontSize * 3.5}px Arial`;
-            ctx.strokeText(scoreText, canvas.width / 2, 350);
-            
-            // Fill for score
-            ctx.fillStyle = textColor;
-            ctx.fillText(scoreText, canvas.width / 2, 350);
-            
-            ctx.shadowBlur = 0;
-            ctx.shadowOffsetX = 0;
-            ctx.shadowOffsetY = 0;
-            
-            // Player image below score
-            if (playerImg) {
-                const imgSize = 600;
-                ctx.save();
-                ctx.globalAlpha = 0.95;
-                ctx.drawImage(playerImg, (canvas.width - imgSize) / 2, 380, imgSize, imgSize);
-                ctx.restore();
-            }
-            
-            // Bottom banner
-            ctx.fillStyle = 'rgba(0,0,0,0.8)';
-            ctx.fillRect(0, canvas.height - 250, canvas.width, 250);
-            
-            // Main achievement text
-            ctx.shadowColor = 'rgba(0,0,0,0.5)';
-            ctx.shadowBlur = 10;
-            ctx.fillStyle = textColor;
-            ctx.font = `bold ${fontSize * 1.3}px Arial`;
-            ctx.fillText(mainText, canvas.width / 2, canvas.height - 140);
-            
-            ctx.shadowBlur = 0;
-            
-            // Decorative line
-            ctx.fillStyle = textColor;
-            ctx.fillRect(canvas.width / 2 - 200, canvas.height - 105, 400, 3);
-            
-            // Sub text
-            ctx.fillStyle = '#ffffff';
-            ctx.font = `${fontSize * 0.6}px Arial`;
-            ctx.fillText(subText, canvas.width / 2, canvas.height - 60);
-        }
-
-        function drawAnnouncementTemplate() {
-            const mainText = document.getElementById('mainText').value || 'THE LESSON';
-            const subText = document.getElementById('subText').value || 'MIGHT, TESTED. IRON, FORGED.';
-            const additionalText = document.getElementById('scoreText').value || 'NO EXCUSES, ONLY LESSONS.';
-            const textColor = document.getElementById('textColor').value;
-            const fontSize = document.getElementById('fontSize').value;
-            
-            // Dark overlay for dramatic effect
-            ctx.fillStyle = 'rgba(0,0,0,0.6)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Top section with gradient
-            const topGradient = ctx.createLinearGradient(0, 0, 0, 400);
-            topGradient.addColorStop(0, 'rgba(0,0,0,0.8)');
-            topGradient.addColorStop(1, 'rgba(0,0,0,0.2)');
-            ctx.fillStyle = topGradient;
-            ctx.fillRect(0, 0, canvas.width, 400);
-            
-            // Main dramatic heading
-            ctx.shadowColor = 'rgba(0,0,0,0.9)';
-            ctx.shadowBlur = 20;
-            ctx.shadowOffsetY = 5;
-            
-            ctx.fillStyle = textColor;
-            ctx.font = `bold ${fontSize * 2}px Arial`;
-            ctx.textAlign = 'center';
-            ctx.fillText(mainText, canvas.width / 2, 220);
-            
-            ctx.shadowBlur = 0;
-            ctx.shadowOffsetY = 0;
-            
-            // Subtitle
-            ctx.fillStyle = '#ffffff';
-            ctx.font = `${fontSize * 0.5}px Arial`;
-            ctx.fillText(subText, canvas.width / 2, 310);
-            
-            // Player images side by side if available
-            if (playerImg) {
-                const imgWidth = 450;
-                const imgHeight = 450;
+            html2canvas(wrapper, {
+                scale: 3,
+                useCORS: true,
+                allowTaint: false,
+                backgroundColor: '#ffffff',
+                logging: false,
+                width: 794,
+                height: Math.max(contentHeight, pageHeight)
+            }).then(function(canvas) {
+                document.body.removeChild(wrapper);
                 
-                // Left player
-                ctx.save();
-                ctx.globalAlpha = 0.9;
-                ctx.drawImage(playerImg, 150, 400, imgWidth, imgHeight);
-                
-                // Right player (mirrored)
-                ctx.scale(-1, 1);
-                ctx.drawImage(playerImg, -canvas.width + 150, 400, imgWidth, imgHeight);
-                ctx.restore();
-            }
-            
-            // Bottom banner
-            const bottomGradient = ctx.createLinearGradient(0, canvas.height - 250, 0, canvas.height);
-            bottomGradient.addColorStop(0, 'rgba(0,0,0,0.3)');
-            bottomGradient.addColorStop(1, 'rgba(0,0,0,0.9)');
-            ctx.fillStyle = bottomGradient;
-            ctx.fillRect(0, canvas.height - 250, canvas.width, 250);
-            
-            // Additional text at bottom
-            ctx.fillStyle = textColor;
-            ctx.font = `bold ${fontSize * 0.7}px Arial`;
-            ctx.fillText(additionalText, canvas.width / 2, canvas.height - 100);
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.download = 'newspaper-' + Date.now() + '.png';
+                    link.href = url;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }, 'image/png');
+            }).catch(function(err) {
+                console.error('Error:', err);
+                document.body.removeChild(wrapper);
+                alert('ডাউনলোড করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+            });
         }
-
-        function addText() {
-            updateCanvas();
-        }
-
-        function clearCanvas() {
-            playerImg = null;
-            logoImg = null;
-            document.getElementById('mainText').value = '';
-            document.getElementById('subText').value = '';
-            document.getElementById('scoreText').value = '';
-            document.getElementById('imagePreview').innerHTML = '';
-            updateCanvas();
-        }
-
-        function downloadImage() {
-            const link = document.createElement('a');
-            link.download = 'social-media-post.png';
-            link.href = canvas.toDataURL();
-            link.click();
-        }
-
-        updateCanvas();
     </script>
 </body>
 </html>
