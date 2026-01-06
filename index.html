@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সোশ্যাল মিডিয়া পোস্ট মেকার</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+        }
+
+        .controls-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            height: fit-content;
+        }
+
+        .control-section {
+            margin-bottom: 25px;
+        }
+
+        .control-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        .canvas-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        canvas {
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            max-width: 100%;
+            cursor: crosshair;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .file-input-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .template-btn {
+            padding: 30px 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            font-weight: bold;
+            transition: all 0.3s;
+            color: #333;
+        }
+
+        .template-btn:hover {
+            transform: scale(1.05);
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .color-picker-wrapper input[type="color"] {
+            width: 50px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .action-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .preview-image {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 2px solid #ddd;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 প্রফেশনাল পোস্ট মেকার</h1>
+            <p>আপনার টিমের জন্য সুন্দর সোশ্যাল মিডিয়া পোস্ট তৈরি করুন</p>
+        </div>
+
+        <div class="main-content">
+            <div class="controls-panel">
+                <div class="control-section">
+                    <h3>📐 টেমপ্লেট সিলেক্ট করুন</h3>
+                    <div class="template-grid">
+                        <button class="template-btn" onclick="selectTemplate('match')">ম্যাচ আপডেট</button>
+                        <button class="template-btn" onclick="selectTemplate('player')">প্লেয়ার স্ট্যাট</button>
+                        <button class="template-btn" onclick="selectTemplate('score')">স্কোর কার্ড</button>
+                        <button class="template-btn" onclick="selectTemplate('announcement')">ঘোষণা</button>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3>🖼️ ছবি আপলোড করুন</h3>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="playerImage" accept="image/*" onchange="uploadPlayerImage(event)">
+                        <label for="playerImage" class="file-input-label">প্লেয়ার ছবি</label>
+                    </div>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="logoImage" accept="image/*" onchange="uploadLogo(event)">
+                        <label for="logoImage" class="file-input-label">টিম লোগো</label>
+                    </div>
+                    <div id="imagePreview"></div>
+                </div>
+
+                <div class="control-section">
+                    <h3>✏️ টেক্সট যোগ করুন</h3>
+                    <div class="input-group">
+                        <label>প্রধান টেক্সট:</label>
+                        <input type="text" id="mainText" placeholder="যেমন: MATCH UPDATE">
+                    </div>
+                    <div class="input-group">
+                        <label>সাব টেক্সট:</label>
+                        <input type="text" id="subText" placeholder="যেমন: খেলোয়াড়ের নাম">
+                    </div>
+                    <div class="input-group">
+                        <label>স্কোর/সংখ্যা:</label>
+                        <input type="text" id="scoreText" placeholder="যেমন: 50 (32)">
+                    </div>
+                    <div class="input-group">
+                        <label>ফন্ট সাইজ:</label>
+                        <input type="range" id="fontSize" min="20" max="120" value="60" oninput="updateCanvas()">
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3>🎨 রঙ সিলেক্ট করুন</h3>
+                    <div class="input-group">
+                        <label>ব্যাকগ্রাউন্ড রঙ:</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" id="bgColor1" value="#1e3a8a" onchange="updateCanvas()">
+                            <input type="color" id="bgColor2" value="#3b82f6" onchange="updateCanvas()">
+                            <span style="font-size: 12px;">গ্রেডিয়েন্ট</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>টেক্সট রঙ:</label>
+                        <input type="color" id="textColor" value="#fbbf24" onchange="updateCanvas()">
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <button class="btn btn-primary" onclick="addText()">টেক্সট যোগ করুন</button>
+                    <button class="btn btn-success" onclick="downloadImage()">ডাউনলোড করুন</button>
+                    <button class="btn btn-primary" onclick="clearCanvas()">রিসেট করুন</button>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="canvas" width="1080" height="1080"></canvas>
+                <div class="action-buttons">
+                    <button class="btn btn-success" onclick="downloadImage()">📥 ডাউনলোড করুন</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let playerImg = null;
+        let logoImg = null;
+        let currentTemplate = 'match';
+
+        function removeBackground(img) {
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = img.width;
+            tempCanvas.height = img.height;
+            
+            tempCtx.drawImage(img, 0, 0);
+            const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+                
+                const brightness = (r + g + b) / 3;
+                const isWhiteish = r > 200 && g > 200 && b > 200;
+                const similarity = Math.abs(r - g) + Math.abs(g - b) + Math.abs(b - r);
+                
+                if (isWhiteish && similarity < 30) {
+                    data[i + 3] = 0;
+                }
+            }
+            
+            tempCtx.putImageData(imageData, 0, 0);
+            return tempCanvas;
+        }
+
+        function uploadPlayerImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        playerImg = removeBackground(img);
+                        updateCanvas();
+                        
+                        const preview = document.getElementById('imagePreview');
+                        preview.innerHTML = '<img src="' + e.target.result + '" class="preview-image" alt="Preview">';
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function uploadLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        logoImg = img;
+                        updateCanvas();
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function selectTemplate(template) {
+            currentTemplate = template;
+            updateCanvas();
+        }
+
+        function drawGradientBackground() {
+            const color1 = document.getElementById('bgColor1').value;
+            const color2 = document.getElementById('bgColor2').value;
+            
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, color1);
+            gradient.addColorStop(1, color2);
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function updateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGradientBackground();
+            
+            if (currentTemplate === 'match') {
+                drawMatchTemplate();
+            } else if (currentTemplate === 'player') {
+                drawPlayerTemplate();
+            } else if (currentTemplate === 'score') {
+                drawScoreTemplate();
+            } else if (currentTemplate === 'announcement') {
+                drawAnnouncementTemplate();
+            }
+            
+            if (logoImg) {
+                ctx.drawImage(logoImg, canvas.width - 200, 50, 150, 150);
+            }
+        }
+
+        function drawMatchTemplate() {
+            const mainText = document.getElementById('mainText').value || 'MATCH UPDATE';
+            const subText = document.getElementById('subText').value || 'খেলোয়াড়ের নাম';
+            const scoreText = document.getElementById('scoreText').value || '150/4';
+            const textColor = document.getElementById('textColor').value;
+            const fontSize = document.getElementById('fontSize').value;
+            
+            ctx.fillStyle = textColor;
+            ctx.font = `bold ${fontSize}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.fillText(mainText, canvas.width / 2, 150);
+            
+            ctx.font = `bold ${parseInt(fontSize) * 1.5}px Arial`;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(scoreText, canvas.width / 2, canvas.height / 2);
+            
+            ctx.font = `${fontSize * 0.6}px Arial`;
+            ctx.fillStyle = textColor;
+            ctx.fillText(subText, canvas.width / 2, canvas.height / 2 + 100);
+            
+            if (playerImg) {
+                const imgWidth = 400;
+                const imgHeight = 400;
+                ctx.drawImage(playerImg, (canvas.width - imgWidth) / 2, canvas.height - imgHeight - 100, imgWidth, imgHeight);
+            }
+        }
+
+        function drawPlayerTemplate() {
+            const mainText = document.getElementById('mainText').value || 'PLAYER';
+            const subText = document.getElementById('subText').value || 'Performance';
+            const scoreText = document.getElementById('scoreText').value || '4/47';
+            const textColor = document.getElementById('textColor').value;
+            const fontSize = document.getElementById('fontSize').value;
+            
+            if (playerImg) {
+                const imgWidth = 500;
+                const imgHeight = 500;
+                ctx.drawImage(playerImg, (canvas.width - imgWidth) / 2, 200, imgWidth, imgHeight);
+            }
+            
+            ctx.fillStyle = 'rgba(0,0,0,0.7)';
+            ctx.fillRect(0, canvas.height - 300, canvas.width, 300);
+            
+            ctx.fillStyle = textColor;
+            ctx.font = `bold ${fontSize}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.fillText(mainText, canvas.width / 2, canvas.height - 220);
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = `bold ${fontSize * 1.2}px Arial`;
+            ctx.fillText(scoreText, canvas.width / 2, canvas.height - 130);
+            
+            ctx.font = `${fontSize * 0.5}px Arial`;
+            ctx.fillText(subText, canvas.width / 2, canvas.height - 60);
+        }
+
+        function drawScoreTemplate() {
+            const mainText = document.getElementById('mainText').value || 'HALF CENTURY';
+            const subText = document.getElementById('subText').value || 'VS Opponents';
+            const scoreText = document.getElementById('scoreText').value || '50*';
+            const textColor = document.getElementById('textColor').value;
+            const fontSize = document.getElementById('fontSize').value;
+            
+            if (playerImg) {
+                const imgSize = 600;
+                ctx.drawImage(playerImg, (canvas.width - imgSize) / 2, 300, imgSize, imgSize);
+            }
+            
+            ctx.fillStyle = textColor;
+            ctx.font = `bold ${fontSize * 2}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 3;
+            ctx.strokeText(scoreText, canvas.width / 2, 250);
+            ctx.fillText(scoreText, canvas.width / 2, 250);
+            
+            ctx.font = `bold ${fontSize}px Arial`;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(mainText, canvas.width / 2, canvas.height - 150);
+            
+            ctx.font = `${fontSize * 0.5}px Arial`;
+            ctx.fillText(subText, canvas.width / 2, canvas.height - 80);
+        }
+
+        function drawAnnouncementTemplate() {
+            const mainText = document.getElementById('mainText').value || 'ANNOUNCEMENT';
+            const subText = document.getElementById('subText').value || 'বিস্তারিত তথ্য এখানে';
+            const textColor = document.getElementById('textColor').value;
+            const fontSize = document.getElementById('fontSize').value;
+            
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillRect(50, 50, canvas.width - 100, canvas.height - 100);
+            
+            ctx.fillStyle = textColor;
+            ctx.font = `bold ${fontSize}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.fillText(mainText, canvas.width / 2, 200);
+            
+            if (playerImg) {
+                const imgSize = 400;
+                ctx.drawImage(playerImg, (canvas.width - imgSize) / 2, 300, imgSize, imgSize);
+            }
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = `${fontSize * 0.6}px Arial`;
+            const lines = subText.split('\n');
+            lines.forEach((line, index) => {
+                ctx.fillText(line, canvas.width / 2, canvas.height - 200 + (index * 50));
+            });
+        }
+
+        function addText() {
+            updateCanvas();
+        }
+
+        function clearCanvas() {
+            playerImg = null;
+            logoImg = null;
+            document.getElementById('mainText').value = '';
+            document.getElementById('subText').value = '';
+            document.getElementById('scoreText').value = '';
+            document.getElementById('imagePreview').innerHTML = '';
+            updateCanvas();
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'social-media-post.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        updateCanvas();
+    </script>
+</body>
+</html>
